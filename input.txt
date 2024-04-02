@@ -1,0 +1,52 @@
+COPY    START   1000
+FIRST   STL     RETADR
+CLOOP   JSUB    RDREC           READ INPUT RECORD
+        LDA     LENGTH
+        COMP    ZERO            TEST FOR EOF
+        JEQ     ENDFIL          JUMP TO END OF JOB
+        JSUB    WRREC           WRITE OUTPUT RECORD
+        J       CLOOP           JUMP BACK TO CLOOP
+ENDFIL  LDA     EOF             LOAD EOF RECORD
+        STA     BUFFER
+        LDA     THREE           SET LENGTH TO 3
+        STA     LENGTH
+        JSUB    WRREC           WRITE EOF RECORD
+        LDL     RETADR          LOAD RETURN ADDRESS
+        RSUB                    RETURN TO CALLER
+EOF     BYTE    C'EOF'
+THREE   WORD    3
+ZERO    WORD    0
+RETADR  RESW    1               STORAGE FOR RETURN ADDRESS
+LENGTH  RESW    1               LENGTH OF RECORD
+BUFFER  RESB    4096            4096-BYTE BUFFER AREA
+        .
+        .
+        .
+RDREC   LDX     ZERO            CLEAR INDEX REGISTER
+        LDA     ZERO            CLEAR A REGISTER
+        LDT     ZERO            CLEAR LINKAGE REGISTER
+RLOOP   TD      INPUT           TEST DATA CHANNEL
+        JEQ     RLOOP           LOOP UNTIL READY
+        RD      INPUT           READ CHARACTER TO REGISTER A
+        COMP    ZERO            TEST FOR EOF ON INPUT
+        JEQ     RDREC           EXIT IF EOF
+        STCH    BUFFER,X        STORE CHARACTER IN BUFFER
+        TIXR    T               UPDATE INDEX REGISTER
+        J       RLOOP           LOOP BACK TO RLOOP
+        STX     LENGTH          STORE LENGTH OF RECORD
+        RSUB                    RETURN TO CALLER
+        .
+        .
+        .
+WRREC   LDX     ZERO            CLEAR LOOP COUNTER
+        LDT     LENGTH           SET COUNTER TO LENGTH
+WLOOP   TD      OUTPUT          TEST OUTPUT DEVICE
+        JEQ     WLOOP           LOOP UNTIL READY
+        LDCH    BUFFER,X        GET CHARACTER FROM BUFFER
+        WD      OUTPUT          WRITE CHARACTER TO OUTPUT
+        TIXR    T               UPDATE INDEX REGISTER
+        J       WLOOP           LOOP BACK TO WLOOP
+        RSUB                    RETURN TO CALLER
+INPUT   BYTE    X'F1'           INPUT DEVICE CODE
+OUTPUT  BYTE    X'05'           OUTPUT DEVICE CODE
+        END     FIRST
