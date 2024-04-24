@@ -15,7 +15,7 @@ git clone https://github.com/yourusername/sic-assembler.git
 cd sic-assembler
 ```
 
-## *** Çalıştırma ***
+## Çalıştırma 
 Assembler'ı çalıştırmak için, projenin bulunduğu dizinde terminal veya komut istemcisini açın ve aşağıdaki komutu girin:
 SIC montajcı programlarının ilk geçiş aşamasında karşılaşılan bazı temel problemler şunlardır:
 Hata Tespiti: Mevcut uygulamalar, tüm hataları doğru şekilde tespit edemeyebilir. Bu durum, programın hatalı çalışmasına veya çökmesine neden olabilir.
@@ -27,7 +27,7 @@ python assembler.py
 Bu komut, assembler betiğini başlatır ve işlem sonuçlarını terminalde görüntüler.
 
 
-## ** Dosya Yapısı **
+##  Dosya Yapısı
 Projede bulunan dosyalar şunlardır:
 
 input.txt: Assembler'ın işleyeceği kaynak kodun bulunduğu dosya.
